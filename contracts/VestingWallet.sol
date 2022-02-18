@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./RecoverableFunds.sol";
-import "./Schedules.sol";
+import "./lib/Schedules.sol";
 import "./interfaces/IVestingWallet.sol";
 
 contract VestingWallet is IVestingWallet, Ownable, RecoverableFunds {
