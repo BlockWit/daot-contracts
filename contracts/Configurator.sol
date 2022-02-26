@@ -150,6 +150,7 @@ contract Configurator is RecoverableFunds {
 
         // configure CrowdSale
         sale.setToken(_token);
+        sale.setBUSD(address(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56));
         sale.setFundraisingWallet(payable(addresses.fundraising));
         sale.setVestingWallet(_wallet);
         sale.setPrice(BASE_PRICE);
