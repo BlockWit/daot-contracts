@@ -26,27 +26,27 @@ contract VestingWallet is IVestingWallet, Ownable, RecoverableFunds {
     event Deposit(uint256 schedule, address account, uint256 tokens);
     event Withdrawal(address account, uint256 tokens);
 
-    function setToken(address tokenAddress) public onlyOwner {
+    function setToken(address tokenAddress) override public onlyOwner {
         token = IERC20(tokenAddress);
     }
 
-    function setVestingSchedule(uint256 id, uint256 start, uint256 duration, uint256 interval) public onlyOwner returns (bool) {
+    function setVestingSchedule(uint256 id, uint256 start, uint256 duration, uint256 interval) override public onlyOwner returns (bool) {
         return schedules.set(id, Schedules.Schedule(start, duration, interval));
     }
 
-    function removeVestingSchedule(uint256 id) public onlyOwner returns (bool) {
+    function removeVestingSchedule(uint256 id) override public onlyOwner returns (bool) {
         return schedules.remove(id);
     }
 
-    function getVestingSchedule(uint256 id) public view returns (Schedules.Schedule memory) {
+    function getVestingSchedule(uint256 id) override public view returns (Schedules.Schedule memory) {
         return schedules.get(id);
     }
 
-    function setBalance(uint256 schedule, address account, uint256 initial, uint256 withdrawn) public onlyOwner {
+    function setBalance(uint256 schedule, address account, uint256 initial, uint256 withdrawn) override public onlyOwner {
         balances[schedule][account] = Balance(initial, withdrawn);
     }
 
-    function deposit(uint256 schedule, address[] calldata beneficiaries, uint256[] calldata amounts) public override {
+    function deposit(uint256 schedule, address[] calldata beneficiaries, uint256[] calldata amounts) override public {
         require(beneficiaries.length == amounts.length, "VestingWallet: Incorrect array length.");
         uint256 sum;
         for (uint256 i = 0; i < amounts.length; i++) {
@@ -69,7 +69,7 @@ contract VestingWallet is IVestingWallet, Ownable, RecoverableFunds {
         emit Deposit(schedule, beneficiary, amount);
     }
 
-    function getAccountInfo(address account) public view returns (uint256, uint256, uint256) {
+    function getAccountInfo(address account) override public view returns (uint256, uint256, uint256) {
         uint256 initial;
         uint256 withdrawn;
         uint256 vested;
@@ -84,7 +84,7 @@ contract VestingWallet is IVestingWallet, Ownable, RecoverableFunds {
         return (initial, withdrawn, vested);
     }
 
-    function withdraw() public returns (uint256) {
+    function withdraw() override public returns (uint256) {
         uint256 tokens;
         for (uint256 index = 0; index < schedules.length(); index++) {
             Balance storage balance = balances[index][msg.sender];

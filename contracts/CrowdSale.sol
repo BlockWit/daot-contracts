@@ -8,8 +8,9 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./interfaces/IVestingWallet.sol";
 import "./lib/Stages.sol";
 import "./RecoverableFunds.sol";
+import "./interfaces/ICrowdSale.sol";
 
-contract CrowdSale is Pausable, RecoverableFunds {
+contract CrowdSale is ICrowdSale, Pausable, RecoverableFunds {
 
     using SafeMath for uint256;
     using Stages for Stages.Map;
@@ -24,63 +25,63 @@ contract CrowdSale is Pausable, RecoverableFunds {
     address payable public fundraisingWallet;
     mapping(address => bool) public whitelist;
 
-    function pause() public onlyOwner {
+    function pause() override public onlyOwner {
         _pause();
     }
 
-    function unpause() public onlyOwner {
+    function unpause() override public onlyOwner {
         _unpause();
     }
 
-    function setToken(address newTokenAddress) public onlyOwner {
+    function setToken(address newTokenAddress) override public onlyOwner {
         token = IERC20(newTokenAddress);
     }
 
-    function setBUSD(address newTokenAddress) public onlyOwner {
+    function setBUSD(address newTokenAddress) override public onlyOwner {
         busd = IERC20(newTokenAddress);
     }
 
-    function setVestingWallet(address newVestingWalletAddress) public onlyOwner {
+    function setVestingWallet(address newVestingWalletAddress) override public onlyOwner {
         vestingWallet = IVestingWallet(newVestingWalletAddress);
     }
 
-    function setPercentRate(uint256 newPercentRate) public onlyOwner {
+    function setPercentRate(uint256 newPercentRate) override public onlyOwner {
         percentRate = newPercentRate;
     }
 
-    function setFundraisingWallet(address payable newFundraisingWalletAddress) public onlyOwner {
+    function setFundraisingWallet(address payable newFundraisingWalletAddress) override public onlyOwner {
         fundraisingWallet = newFundraisingWalletAddress;
     }
 
-    function setPrice(uint256 newPrice) public onlyOwner {
+    function setPrice(uint256 newPrice) override public onlyOwner {
         price = newPrice;
     }
 
-    function setStage(uint256 id,uint256 start, uint256 end, uint256 bonus, uint256 minInvestmentLimit, uint256 hardcapInTokens, uint256 vestingSchedule, uint256 invested, uint256 tokensSold, bool whitelist) public onlyOwner returns (bool) {
+    function setStage(uint256 id,uint256 start, uint256 end, uint256 bonus, uint256 minInvestmentLimit, uint256 hardcapInTokens, uint256 vestingSchedule, uint256 invested, uint256 tokensSold, bool whitelist) override public onlyOwner returns (bool) {
         return stages.set(id, Stages.Stage(start, end, bonus, minInvestmentLimit, hardcapInTokens, vestingSchedule, invested, tokensSold, whitelist));
     }
 
-    function removeStage(uint256 id) public onlyOwner returns (bool) {
+    function removeStage(uint256 id) override public onlyOwner returns (bool) {
         return stages.remove(id);
     }
 
-    function getStage(uint256 id) public view returns (Stages.Stage memory) {
+    function getStage(uint256 id) override public view returns (Stages.Stage memory) {
         return stages.get(id);
     }
 
-    function addToWhitelist(address[] calldata accounts) public onlyOwner {
+    function addToWhitelist(address[] calldata accounts) override public onlyOwner {
         for (uint256 i = 0; i < accounts.length; i++) {
             whitelist[accounts[i]] = true;
         }
     }
 
-    function removeFromWhitelist(address[] calldata accounts) public onlyOwner {
+    function removeFromWhitelist(address[] calldata accounts) override public onlyOwner {
         for (uint256 i = 0; i < accounts.length; i++) {
             whitelist[accounts[i]] = false;
         }
     }
 
-    function getActiveStageIndex() public view returns (bool, uint256) {
+    function getActiveStageIndex() override public view returns (bool, uint256) {
         for (uint256 i = 0; i < stages.length(); i++) {
             Stages.Stage storage stage = stages.get(i);
             if (block.timestamp >= stage.start && block.timestamp < stage.end && stage.tokensSold <= stage.hardcapInTokens) {
