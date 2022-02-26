@@ -143,8 +143,10 @@ contract Configurator is RecoverableFunds {
         depositor = ITokenDepositor(_depositor);
 
         // distribute tokens
-        token.transferFrom(msg.sender, _sale, amounts.sale);
-        token.transferFrom(msg.sender, addresses.liquidity, amounts.liquidity);
+        uint256 amount = token.balanceOf(msg.sender);
+        token.transferFrom(msg.sender, address(this), amount);
+        token.transfer(_sale, amounts.sale);
+        token.transfer(addresses.liquidity, amounts.liquidity);
 
         // configure CrowdSale
         sale.setToken(_token);
@@ -165,6 +167,7 @@ contract Configurator is RecoverableFunds {
         // configure TokenDepositor
         depositor.setToken(_token);
         depositor.setVestingWallet(_wallet);
+        token.approve(_depositor, amounts.advisors + amounts.airdrop + amounts.staking + amounts.team + amounts.marketing + amounts.reserve);
         depositor.deposit(10,  5, addresses.advisors,   amounts.advisors);
         depositor.deposit(10,  6, addresses.airdrop,    amounts.airdrop);
         depositor.deposit( 0,  7, addresses.staking,    amounts.staking);
