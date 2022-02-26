@@ -24,6 +24,18 @@ contract TokenDepositor is ITokenDepositor, RecoverableFunds {
         vestingWallet = IVestingWallet(newVestingWalletAddress);
     }
 
+    function deposit(uint256 unlocked, uint256 schedule, address beneficiary, uint256 amount) override public onlyOwner {
+        token.approve(address(vestingWallet), amount);
+        if (unlocked == 0) {
+            vestingWallet.deposit(schedule, beneficiary, amount);
+        } else {
+            uint256 unlockedAmount = amount.mul(unlocked).div(100);
+            uint256 lockedAmount = amount.sub(unlockedAmount);
+            vestingWallet.deposit(0, beneficiary, unlockedAmount);
+            vestingWallet.deposit(schedule, beneficiary, lockedAmount);
+        }
+    }
+
     function deposit(uint256 unlocked, uint256 schedule, address[] calldata beneficiaries, uint256[] calldata amounts) override public onlyOwner {
         uint256 totalAmount;
         for (uint256 i; i < amounts.length; i++) {
