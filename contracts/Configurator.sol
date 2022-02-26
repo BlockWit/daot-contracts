@@ -167,7 +167,7 @@ contract Configurator is RecoverableFunds {
         // configure TokenDepositor
         depositor.setToken(_token);
         depositor.setVestingWallet(_wallet);
-        token.approve(_depositor, amounts.advisors + amounts.airdrop + amounts.staking + amounts.team + amounts.marketing + amounts.reserve);
+        token.transfer(_depositor, amounts.advisors + amounts.airdrop + amounts.staking + amounts.team + amounts.marketing + amounts.reserve);
         depositor.deposit(10,  5, addresses.advisors,   amounts.advisors);
         depositor.deposit(10,  6, addresses.airdrop,    amounts.airdrop);
         depositor.deposit( 0,  7, addresses.staking,    amounts.staking);
