@@ -15,6 +15,7 @@ library Stages {
         uint256 minInvestmentLimit;
         uint256 hardcapInTokens;
         uint256 vestingSchedule;
+        uint256 unlockedOnTGE;
         uint256 invested;
         uint256 tokensSold;
         bool whitelist;

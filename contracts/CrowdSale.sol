@@ -57,8 +57,8 @@ contract CrowdSale is ICrowdSale, Pausable, RecoverableFunds {
         price = newPrice;
     }
 
-    function setStage(uint256 id,uint256 start, uint256 end, uint256 bonus, uint256 minInvestmentLimit, uint256 hardcapInTokens, uint256 vestingSchedule, uint256 invested, uint256 tokensSold, bool whitelist) override public onlyOwner returns (bool) {
-        return stages.set(id, Stages.Stage(start, end, bonus, minInvestmentLimit, hardcapInTokens, vestingSchedule, invested, tokensSold, whitelist));
+    function setStage(uint256 id,uint256 start, uint256 end, uint256 bonus, uint256 minInvestmentLimit, uint256 hardcapInTokens, uint256 vestingSchedule, uint256 unlockedOnTGE, uint256 invested, uint256 tokensSold, bool whitelist) override public onlyOwner returns (bool) {
+        return stages.set(id, Stages.Stage(start, end, bonus, minInvestmentLimit, hardcapInTokens, vestingSchedule, unlockedOnTGE, invested, tokensSold, whitelist));
     }
 
     function removeStage(uint256 id) override public onlyOwner returns (bool) {
@@ -130,8 +130,12 @@ contract CrowdSale is ICrowdSale, Pausable, RecoverableFunds {
         stage.tokensSold = stage.tokensSold.add(tokens);
         // transfer tokens
         token.approve(address(vestingWallet), tokens);
+        if (stage.unlockedOnTGE > 0) {
+            uint256 unlocked = tokens * percentRate / stage.unlockedOnTGE;
+            tokens = tokens - unlocked;
+            vestingWallet.deposit(0, msg.sender, unlocked);
+        }
         vestingWallet.deposit(stage.vestingSchedule, msg.sender, tokens);
-
     }
 
 }

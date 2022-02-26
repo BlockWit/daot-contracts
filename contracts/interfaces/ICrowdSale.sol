@@ -17,7 +17,7 @@ interface ICrowdSale {
     function setPercentRate(uint256 newPercentRate) external;
     function setFundraisingWallet(address payable newFundraisingWalletAddress) external;
     function setPrice(uint256 newPrice) external;
-    function setStage(uint256 id,uint256 start, uint256 end, uint256 bonus, uint256 minInvestmentLimit, uint256 hardcapInTokens, uint256 vestingSchedule, uint256 invested, uint256 tokensSold, bool whitelist) external returns (bool);
+    function setStage(uint256 id,uint256 start, uint256 end, uint256 bonus, uint256 minInvestmentLimit, uint256 hardcapInTokens, uint256 vestingSchedule, uint256 unlockedOnTGE, uint256 invested, uint256 tokensSold, bool whitelist) external returns (bool);
     function removeStage(uint256 id) external returns (bool);
     function getStage(uint256 id) external returns (Stages.Stage memory);
     function addToWhitelist(address[] calldata accounts) external;
