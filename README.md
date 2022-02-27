@@ -1,4 +1,4 @@
-![DAOT](daot.svg "DAO Tools")
+![DAOT](logo.png "DAO Tools")
 
 # DAOT smart contracts
 
