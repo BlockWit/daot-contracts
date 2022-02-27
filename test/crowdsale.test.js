@@ -41,7 +41,7 @@ describe('CrowdSale', async function () {
     await Promise.all(users.map(user => busd.transfer(user, ether('1000000').divn(accounts.length), { from: deployer })))
     await Promise.all(STAGES.map((stage, i) => {
       const { start, end, bonus, minInvestmentLimit, hardcap, whitelist } = stage;
-      return sale.setStage(i, start, end, bonus, minInvestmentLimit, hardcap, 0, 0, 0, whitelist, { from: deployer });
+      return sale.setStage(i, start, end, bonus, minInvestmentLimit, hardcap, 0, 0, 0, 0, whitelist, { from: deployer });
     }));
     await Promise.all([
       sale.transferOwnership(owner, { from: deployer }),
@@ -114,6 +114,21 @@ describe('CrowdSale', async function () {
     expect(tokensReceived).to.be.bignumber.equal(tokensExpected);
   });
 
+  it('should distribute tokens between stages correctly when unlockedOnTGE > 0', async function () {
+    const { start, end, bonus, minInvestmentLimit, hardcap } = STAGES[1];
+    const vestingSchedule = 1;
+    const unlockedOnTGE = 10;
+    const whitelist = false;
+    await sale.setStage(1, start, end, bonus, minInvestmentLimit, hardcap, vestingSchedule, unlockedOnTGE, 0, 0, whitelist, { from: owner });
+    await increaseDateTo(start);
+    const busdSent = ether('0.123');
+    await busd.approve(sale.address, busdSent, { from: buyer });
+    await sale.buy(busdSent, { from: buyer });
+    const {initial: unlocked} = await wallet.balances(0, buyer);
+    const {initial: locked} = await wallet.balances(1, buyer);
+    expect(unlocked).to.be.bignumber.equal(unlocked.add(locked).muln(unlockedOnTGE).divn(100));
+  });
+
   it('should remove stage by index correctly', async function () {
     await sale.removeStage(0, { from: owner });
     const stage1 = await sale.getStage(1);
@@ -134,14 +149,14 @@ describe('CrowdSale', async function () {
     });
     it('should not allow non-whitelisted users to buy tokens', async function () {
       const { start, end, bonus, minInvestmentLimit, hardcap } = STAGES[0];
-      await sale.setStage(0, start, end, bonus, minInvestmentLimit, hardcap, 0, 0, 0, true, { from: owner });
+      await sale.setStage(0, start, end, bonus, minInvestmentLimit, hardcap, 0, 0, 0, 0, true, { from: owner });
       await increaseDateTo(start);
       await busd.approve(sale.address, ether('1'), { from: buyer });
       await expectRevert(sale.buy(ether('1'), { from: buyer }), 'CrowdSale: Caller is not whitelisted');
     })
     it('should allow whitelisted users to buy tokens', async function () {
       const { start, end, bonus, minInvestmentLimit, hardcap } = STAGES[0];
-      await sale.setStage(0, start, end, bonus, minInvestmentLimit, hardcap, 0, 0, 0, true, { from: owner });
+      await sale.setStage(0, start, end, bonus, minInvestmentLimit, hardcap, 0, 0, 0, 0, true, { from: owner });
       await sale.addToWhitelist([buyer], {from: owner});
       await increaseDateTo(start);
       await busd.approve(sale.address, ether('0.123'), { from: buyer });

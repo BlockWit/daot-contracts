@@ -131,7 +131,7 @@ contract CrowdSale is ICrowdSale, Pausable, RecoverableFunds {
         // transfer tokens
         token.approve(address(vestingWallet), tokens);
         if (stage.unlockedOnTGE > 0) {
-            uint256 unlocked = tokens * percentRate / stage.unlockedOnTGE;
+            uint256 unlocked = tokens * stage.unlockedOnTGE / percentRate;
             tokens = tokens - unlocked;
             vestingWallet.deposit(0, msg.sender, unlocked);
         }
