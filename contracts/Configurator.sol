@@ -99,8 +99,8 @@ contract Configurator is RecoverableFunds {
         schedules[6].interval =   1 days;
         // Staking & Farming
         schedules[7].start =      1649937600;         // April 14 2022 12:00:00 UTC
-        schedules[7].duration =   0;
-        schedules[7].interval =   0;
+        schedules[7].duration =   540 days;
+        schedules[7].interval =   1 days;
         // Team
         schedules[8].start =      1649937600;         // April 14 2022 12:00:00 UTC
         schedules[8].duration =   720 days;
@@ -127,15 +127,15 @@ contract Configurator is RecoverableFunds {
 
         Addresses memory addresses;
 
-        addresses.owner =         msg.sender;
-        addresses.fundraising =   msg.sender;
-        addresses.advisors =      msg.sender;
-        addresses.airdrop =       msg.sender;
-        addresses.staking =       msg.sender;
-        addresses.team =          msg.sender;
-        addresses.marketing =     msg.sender;
-        addresses.reserve =       msg.sender;
-        addresses.liquidity =     msg.sender;
+        addresses.owner =         address(0x898a7BB38ACe4CaA41b174d3b6642Da61B299830);
+        addresses.fundraising =   address(0x7808C28816342C979040640cE2B4229A8Ac3e13B);
+        addresses.advisors =      address(0x236EF00d61F28bb81D98fF60a8D8359789ebcB9e);
+        addresses.airdrop =       address(0x4303f25E16ae307Be99D63ea09aCAF39954A390F);
+        addresses.staking =       address(0x3a37aB193cD197020e0Ec91C98aE0C50B2525b74);
+        addresses.team =          address(0x7aB40e6087181f66918b6dF104A83A393e73127B);
+        addresses.marketing =     address(0x43001cCdC8C16d90E0aD3f8665A421E4680ba96C);
+        addresses.reserve =       address(0x80C2372F47761bdFA2b2c2Ecb6a516307fb4349b);
+        addresses.liquidity =     address(0xA8b355E277E42C6F7F485bc3d4F104175Dd68d87);
 
         token = IERC20(_token);
         sale = ICrowdSale(_sale);
