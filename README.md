@@ -57,9 +57,9 @@ EXODUS does not support BEP20, but provides the ability to export the private ke
 
 ## Test network configuration (BSC Testnet)
 ### Contracts
-* [Token](https://testnet.bscscan.com/address/0x5cE47de98ecE5cb653657f9b28d9cc8F962a48A4)
-* [VestingWallet](https://testnet.bscscan.com/address/0x751ebBFA868A541fDFee97878042306ff9ddAE77)
-* [Sale](https://testnet.bscscan.com/address/0x8F3b29CF7d0204Bf87D609e2b3126Ed6e35871a3)
+* [Token](https://testnet.bscscan.com/address/0x0b02e64EcAb607037b3c9d79A1F2D5cdF9724d90)
+* [VestingWallet](https://testnet.bscscan.com/address/0x8D8Fd8E8D024979A651c8FA68c079D3bC866F229)
+* [Sale](https://testnet.bscscan.com/address/0x4bAc992BBd3F2e747924E9C046C064D59eAA7446)
 
 You can find test log [here](docs/bsctestnet.log.md)
 
